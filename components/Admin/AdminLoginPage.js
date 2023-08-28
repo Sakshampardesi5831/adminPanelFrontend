@@ -91,7 +91,6 @@ const AdminLoginPage = () => {
   const dispatch=useDispatch();
   const router=useRouter();
   const {admin,isAuthenticated}=useSelector((state)=>state.AdminReducer);
-
   const submitHandler=(e)=>{
        e.preventDefault();
        let admin={
