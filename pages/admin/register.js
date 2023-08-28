@@ -1,8 +1,10 @@
-import React from 'react'
-
+import React, { Fragment } from 'react'
+import AdminRegisterSection from '@/components/Admin/AdminRegisterSection'
 const AdminRegister = () => {
   return (
-    <div>AdminRegister</div>
+    <Fragment>
+      <AdminRegisterSection/>
+    </Fragment>
   )
 }
 

@@ -1,9 +1,10 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import {Box,Typography,Button,InputBase,styled} from '@mui/material'
-import {AdminPanelSettings} from '@mui/icons-material'
+import {AddOutlined, AdminPanelSettings} from '@mui/icons-material'
 import Link from 'next/link';
-import { asyncAdminSignin } from '@/store/Action/AdminAction';
+import { asyncAdminSignin,asyncCurrentAdmin } from '@/store/Action/AdminAction';
 import {useDispatch,useSelector} from 'react-redux'
+import { useRouter } from 'next/router';
 /**----------------------------------------------------------------------- */
 const AdminWrapper=styled(Box)({
  width:"100%",
@@ -67,7 +68,10 @@ const AdminInput=styled(InputBase)({
 const ButtonWrapper=styled(Box)({
     width:'100%',
     padding:"5px 10px",
-    marginTop:"10px"
+    marginTop:"10px",
+    display:"flex",
+    justifyContent:"space-between",
+    alignItems:"center"
 })
 const ButtonStyler=styled(Button)({
    padding:"10px 35px",
@@ -85,6 +89,9 @@ const AdminLoginPage = () => {
   const [email,setEmail]=useState("");
   const [password,setPassword]=useState("");
   const dispatch=useDispatch();
+  const router=useRouter();
+  const {admin,isAuthenticated}=useSelector((state)=>state.AdminReducer);
+
   const submitHandler=(e)=>{
        e.preventDefault();
        let admin={
@@ -93,6 +100,14 @@ const AdminLoginPage = () => {
        }
      dispatch(asyncAdminSignin(admin));
   }
+  useEffect(()=>{
+    if(!isAuthenticated){
+       dispatch(asyncCurrentAdmin());
+    }
+    if(isAuthenticated){
+      router.push("/admin/dashboard");
+    }
+  },[isAuthenticated])
   return (
     <Fragment>
        <AdminWrapper>
@@ -111,6 +126,7 @@ const AdminLoginPage = () => {
              </ AdminFormContentWrapper> 
              <ButtonWrapper>
                <ButtonStyler onClick={submitHandler}>Login</ButtonStyler>
+               <Link style={{color:"#FFF",textDecoration:"none",display:"flex",alignItems:"center",padding:"10px 25px",border:"2px solid #fff"}}href={`/admin/register`}><AddOutlined/>Create Account</Link>
             </ButtonWrapper> 
           </AdminForm>
           </AdminFromWrapper>

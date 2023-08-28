@@ -13,6 +13,7 @@ export const setAdmin=()=> async (dispatch,getState)=>{
 export const asyncCurrentAdmin=()=>async (dispatch,getState)=>{
     try {
       const res=await instance.get("/admin/currentAdmin");
+      
       dispatch(SetUser(res.data.admin));
     } catch (error) {
        console.log(error);

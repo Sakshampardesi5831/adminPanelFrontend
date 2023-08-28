@@ -1,11 +1,14 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useEffect } from 'react'
 import {AppBar,
   Toolbar,
   Box,
   Typography,
   styled,
 } from '@mui/material'
-import {Person} from '@mui/icons-material'
+import {Person, Route} from '@mui/icons-material'
+import {useDispatch,useSelector} from 'react-redux'
+import { asyncAdminSignOut,asyncCurrentAdmin } from '@/store/Action/AdminAction'
+import { useRouter } from 'next/router'
 /**---------------------------------------------------------------- */
 
 const StyleWrapper=styled(AppBar)({
@@ -31,9 +34,32 @@ const UserHeading=styled(Typography)({
    color:"#fff",
    fontWeight:"700"
 });
+const UserWrapper=styled(Box)({
+  width:"20%",
+  padding:"10px 15px",
+  display:"flex",
+  justifyContent:"space-around",
+  alignItems:"center"
+});
 
 /**----------------------------------------------------------------- */
 const AdminNavbar = () => {
+  const {admin,isAuthenticated}=useSelector((state)=>state.AdminReducer);
+  const dispatch=useDispatch();
+  const router=useRouter();
+  useEffect(()=>{
+    if(!isAuthenticated){
+      dispatch(asyncCurrentAdmin());
+    }
+    if(isAuthenticated){
+      router.push("/admin/dashboard");
+    }
+  },[isAuthenticated]);
+  const handleSignOut=()=>{
+      dispatch(asyncAdminSignOut());
+      dispatch(asyncCurrentAdmin());
+      router.push("/");
+  }
   return (
     <Fragment>
       <StyleWrapper position='static'>
@@ -42,7 +68,10 @@ const AdminNavbar = () => {
              <Person fontSize='25'/>
                User Management
            </LogoHeading>
-           <UserHeading>UserName</UserHeading>
+            <UserWrapper>
+            <UserHeading>{admin?.firstname}</UserHeading>
+            <UserHeading onClick={()=>handleSignOut()}style={{fontSize:"18px",cursor:"pointer"}}>signOut</UserHeading>
+            </UserWrapper>  
         </Toolbar>
       </StyleWrapper>
     </Fragment>

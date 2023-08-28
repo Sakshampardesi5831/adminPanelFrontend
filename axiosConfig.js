@@ -1,7 +1,7 @@
 import axios from "axios";
-
+//"http://localhost:8080/"
 const instance=axios.create({
-  baseURL:"http://localhost:8080/",
+  baseURL:`${process.env.NEXT_PUBLIC_BACKENDAPI}`,
   withCredentials:true  
 });
 
